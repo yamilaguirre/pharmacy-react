@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_BASE_URL = "http://localhost:8080/api/v1";
+import { API_BASE_URL } from "./ApiUrl.js";
 
 const userService = {
   fetchUsers: async () => {
@@ -36,13 +35,8 @@ const userService = {
 
   createUser: async (userData) => {
     try {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const newUser = { id: Math.random(), ...userData };
-          console.log("Simulando creación de usuario:", newUser);
-          resolve(newUser);
-        }, 500);
-      });
+      const response = await axios.post(`${API_BASE_URL}/users`, userData);
+      return response.data;
     } catch (error) {
       console.error("Error al crear usuario:", error);
       throw error;

@@ -1,25 +1,25 @@
-// tailwind.config.js
-/** @type {import('tailwindcss').Config} */
-export default {
-  // El array 'content' le dice a Tailwind CSS qué archivos debe escanear
-  // para encontrar los nombres de clase que estás utilizando.
-  // Tailwind solo generará CSS para las clases que encuentre en estos archivos.
-  content: [
-    "./index.html", // Incluye tu archivo HTML principal
-    "./src/**/*.{js,ts,jsx,tsx}", // ¡Crucial!: Escanea todos los archivos JS, TS, JSX, TSX dentro del directorio src/
-  ],
+import { defineConfig } from "@tailwindcss/vite";
+
+export default defineConfig({
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      // Puedes extender el tema predeterminado de Tailwind aquí, por ejemplo:
       colors: {
-        "pharmacy-green": "#34D399",
+        main: "#FFFFFF",
+        secondary: "#FFFFFF",
+        accent: "#F59E0B",
+        light: "#F3F4F6",
+        dark: "#111827",
+        focus: "#2563EB",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"], // Define fuentes personalizadas
+        sans: ["Roboto", "system-ui", "sans-serif"],
+      },
+      fontSize: {
+        title: "3rem",
+        subtitle: "1.5rem",
+        "base-md": "1rem",
       },
     },
   },
-  plugins: [
-    // Agrega cualquier plugin de Tailwind aquí si los necesitas más adelante, por ejemplo, require('@tailwindcss/forms')
-  ],
-};
+});

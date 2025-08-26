@@ -1,1 +1,14 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+@theme {
+    --color-background: #FFFFFF;
+    --color-main: #FFFFFF;
+    --color-secondary: #FFFFFF;
+    --color-accent: #FFFFFF;
+    --color-light: #ffffff;
+    --color-dark: #ffffff;
+    --color-focus: #E8E8E8;
+    --color-textcolor: #000000;
+    --color-textcolorfocus: #000000;
+}
