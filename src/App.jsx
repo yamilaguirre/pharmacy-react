@@ -4,6 +4,7 @@ import Dashboard from "./assets/pages/Dashboard";
 import Customers from "./assets/pages/Customers";
 import Products from "./assets/pages/Products";
 import Suppliers from "./assets/pages/Suppliers";
+import Categories from "./assets/pages/Categories";
 import Purchases from "./assets/pages/Purchases";
 import Sells from "./assets/pages/Sells";
 import Users from "./assets/pages/Users";
@@ -19,10 +20,12 @@ function App() {
         return <Users />;
       case "Customers":
         return <Customers />;
-      case "Products":
-        return <Products />;
       case "Suppliers":
         return <Suppliers />;
+      case "Categories":
+        return <Categories />;
+      case "Products":
+        return <Products />;
       case "Sells":
         return <Sells />;
       case "Purchases":

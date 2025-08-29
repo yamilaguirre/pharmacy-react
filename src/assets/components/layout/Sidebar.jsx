@@ -18,6 +18,7 @@ function Sidebar({ onSelectOption, selectedOption }) {
     { name: "Users", icon: <Users size={20} className="mr-3" /> },
     { name: "Customers", icon: <Users2 size={20} className="mr-3" /> },
     { name: "Suppliers", icon: <Truck size={20} className="mr-3" /> },
+    { name: "Categories", icon: <Menu size={20} className="mr-3" /> },
     { name: "Products", icon: <Pill size={20} className="mr-3" /> },
     { name: "Sells", icon: <TrendingUp size={20} className="mr-3" /> },
     { name: "Purchases", icon: <ShoppingCart size={20} className="mr-3" /> },

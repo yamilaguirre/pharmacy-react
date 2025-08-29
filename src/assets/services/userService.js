@@ -38,8 +38,91 @@ const userService = {
       const response = await axios.post(`${API_BASE_URL}/users`, userData);
       return response.data;
     } catch (error) {
-      console.error("Error al crear usuario:", error);
-      throw error;
+      if (error.response) {
+        console.error(
+          "Error al crear usuario:",
+          error.response.status,
+          error.response.data
+        );
+        throw new Error(
+          `Error del servidor: ${error.response.status} - ${
+            error.response.data.message || "Error al crear usuario"
+          }`
+        );
+      } else if (error.request) {
+        console.error(
+          "No se recibió respuesta del servidor al crear usuario:",
+          error.request
+        );
+        throw new Error(
+          "No se pudo conectar con el servidor para crear el usuario."
+        );
+      } else {
+        console.error("Error al configurar la petición de creación:", error.message);
+        throw new Error(`Error en la petición: ${error.message}`);
+      }
+    }
+  },
+
+  updateUser: async (userId, userData) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/users/${userId}`, userData);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Error al actualizar usuario:",
+          error.response.status,
+          error.response.data
+        );
+        throw new Error(
+          `Error del servidor: ${error.response.status} - ${
+            error.response.data.message || "Error al actualizar usuario"
+          }`
+        );
+      } else if (error.request) {
+        console.error(
+          "No se recibió respuesta del servidor al actualizar usuario:",
+          error.request
+        );
+        throw new Error(
+          "No se pudo conectar con el servidor para actualizar el usuario."
+        );
+      } else {
+        console.error("Error al configurar la petición de actualización:", error.message);
+        throw new Error(`Error en la petición: ${error.message}`);
+      }
+    }
+  },
+
+  deleteUser: async (userId) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/users/${userId}`);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Error al eliminar usuario:",
+          error.response.status,
+          error.response.data
+        );
+        throw new Error(
+          `Error del servidor: ${error.response.status} - ${
+            error.response.data.message || "Error al eliminar usuario"
+          }`
+        );
+      } else if (error.request) {
+        console.error(
+          "No se recibió respuesta del servidor al eliminar usuario:",
+          error.request
+        );
+        throw new Error(
+          "No se pudo conectar con el servidor para eliminar el usuario."
+        );
+      } else {
+        console.error("Error al configurar la petición de eliminación:", error.message);
+        throw new Error(`Error en la petición: ${error.message}`);
+      }
     }
   },
 };

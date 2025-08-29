@@ -1,11 +1,16 @@
-// src/pages/Users.jsx
 import React, { useState, useEffect } from "react";
 import userService from "../services/userService.js";
+import UserForm from "../../components/forms/UserForm.jsx";
+import ConfirmModal from "../../components/common/ConfirmModal.jsx";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isUserFormOpen, setIsUserFormOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -61,37 +66,126 @@ function Users() {
 
   return (
     <div className="w-full h-full p-6 bg-white rounded-xl shadow-lg flex flex-col items-center">
-      <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
-        Lista de Usuarios 👤
-      </h2>
+      <div className="w-full max-w-3xl flex justify-between items-center mb-6">
+        <h2 className="text-4xl font-bold text-gray-800 text-center flex-1">
+          User List
+        </h2>
+        <button
+          onClick={() => {
+            setSelectedUser(null);
+            setIsUserFormOpen(true);
+          }}
+          className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+        >
+          + Create User
+        </button>
+      </div>
       {users.length > 0 ? (
-        <ul className="space-y-3 p-4 bg-gray-50 rounded-lg shadow-inner max-h-[calc(100vh-18rem)] overflow-y-auto w-full max-w-3xl">
-          {users.map((user) => (
-            <li
-              key={user.id}
-              className="flex flex-col md:flex-row md:items-center justify-between bg-white p-4 rounded-md shadow-sm border border-gray-200"
-            >
-              <div className="text-gray-800 font-medium">
-                {user.firstName} {user.lastName}{" "}
-                <span className="text-gray-500 text-sm">({user.email})</span>
-              </div>
-              <div className="text-teal-600 font-semibold md:ml-4 mt-1 md:mt-0">
-                {user.role}
-              </div>
-              <button className="text-red-600 hover:text-red-800">
-                Eliminar
-              </button>
-              <button className="text-blue-600 hover:text-blue-800 mt-2 md:mt-0">
-                Editar
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="w-full max-w-6xl overflow-x-auto">
+          <table className="table-auto w-full bg-white rounded-lg shadow">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-4 py-3 text-left text-gray-700 font-medium">Name</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-medium">Email</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-medium">Role</th>
+                <th className="px-4 py-3 text-left text-gray-700 font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id} className="border-t hover:bg-gray-50">
+                  <td className="px-4 py-3 text-gray-800">{user.firstName} {user.lastName}</td>
+                  <td className="px-4 py-3 text-gray-600">{user.email}</td>
+                  <td className="px-4 py-3 text-teal-600 font-semibold">{user.role}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setIsUserFormOpen(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          setUserToDelete(user);
+                          setIsDeleteModalOpen(true);
+                        }}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <p className="text-gray-600 text-lg text-center">
-          No se encontraron usuarios.
+          There are no users yet.
         </p>
       )}
+
+      <UserForm
+        isOpen={isUserFormOpen}
+        onClose={() => {
+          setIsUserFormOpen(false);
+          setSelectedUser(null);
+        }}
+        onSave={async (userData) => {
+          console.log(userData);
+          try {
+            if (selectedUser) {
+              const updatedUser = await userService.updateUser(
+                selectedUser.id,
+                userData
+              );
+              setUsers(
+                users.map((user) =>
+                  user.id === selectedUser.id ? updatedUser : user
+                )
+              );
+            } else {
+              const newUser = await userService.createUser(userData);
+              setUsers([...users, newUser]);
+            }
+            setIsUserFormOpen(false);
+            setSelectedUser(null);
+          } catch (error) {
+            console.error("Error al guardar usuario:", error);
+            setError(error.message);
+          }
+        }}
+        user={selectedUser}
+        title={selectedUser ? "Editar Usuario" : "Añadir Nuevo Usuario"}
+      />
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setUserToDelete(null);
+        }}
+        onConfirm={async () => {
+          try {
+            await userService.deleteUser(userToDelete.id);
+            setUsers(users.filter((user) => user.id !== userToDelete.id));
+            setIsDeleteModalOpen(false);
+            setUserToDelete(null);
+          } catch (error) {
+            console.error("Error al eliminar usuario:", error);
+            setError(error.message);
+          }
+        }}
+        title="Eliminar Usuario"
+        message={`¿Estás seguro de que deseas eliminar a ${userToDelete?.firstName} ${userToDelete?.lastName}?`}
+        confirmText="Eliminar"
+        type="danger"
+      />
     </div>
   );
 }

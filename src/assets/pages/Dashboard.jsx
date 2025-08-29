@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import React from "react";
 
 function Dashboard() {
@@ -16,7 +15,7 @@ function Dashboard() {
       <p className="text-md text-gray-500 mt-4">
         Selecciona una opción del menú lateral para explorar en detalle.
       </p>
-      {/* Aquí podrías añadir widgets como gráficos de ventas, conteo de productos, etc. */}
+
     </div>
   );
 }
